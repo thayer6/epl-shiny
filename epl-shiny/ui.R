@@ -7,6 +7,6 @@ ui <- basicPage(
     DT::dataTableOutput("epl_table"),
     
     h2("Points Pool Table"),
-    DT::dataTableOutput("owner_table"),
+    DT::dataTableOutput("owner_table")
 )
 

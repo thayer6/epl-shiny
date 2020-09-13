@@ -106,7 +106,7 @@ epl_table[epl_table$team %in% jason_teams,]$owner <- "Jason"
 epl_table[epl_table$team %in% casey_teams,]$owner <- "Casey"
 epl_table[epl_table$team %in% megan_teams,]$owner <- "Megan"
 epl_table[epl_table$team %in% cb_teams,]$owner <- "CB"
-epl_table[epl_table$team %in% neo_teams,]$owner <- "Neo ⭐"
+epl_table[epl_table$team %in% neo_teams,]$owner <- "Neo"
 
 # group by owner and sum points to create owner table
 otable = epl_table %>% 

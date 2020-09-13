@@ -6,6 +6,7 @@ shinyServer(function(input, output) {
 
     # connect to database
     library(RMySQL)
+    library(tidyverse)
 
     db_user = "root"
     db_password = "Nuggetsbball2020"
@@ -20,13 +21,12 @@ shinyServer(function(input, output) {
     epl_table_query = paste("SELECT * FROM epl_table")
     rs = dbSendQuery(mydb, epl_table_query)
     epl_table = dbFetch(rs)
-    epl_table <- subset(epl_table, select = -c(index))
+    epl_table$owner = gsub("Neo", "Neo ⭐", epl_table$owner)
 
     # pull owner table
     owner_table_query = paste("SELECT * FROM owner_table")
     rs = dbSendQuery(mydb, owner_table_query)
     owner_table = dbFetch(rs)
-    owner_table <- subset(owner_table, select = -c(index))
     
     library(DT)
     output$epl_table = DT::renderDataTable({datatable(epl_table, rownames = F, options = list(
