@@ -130,6 +130,9 @@ db_port = 3306
 # connect
 mydb = dbConnect(MySQL(), user = db_user, password = db_password, dbname = db_name, host = db_host, port = db_port)
 
+# if there is a local loading error try this
+#dbSendQuery(mydb, "SET GLOBAL local_infile = true;")
+
 # write epl table
 dbWriteTable(conn = mydb,
              name = epl_table,
