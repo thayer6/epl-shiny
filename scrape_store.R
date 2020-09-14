@@ -1,6 +1,7 @@
 # load libraries
 library(rvest)
 library(dplyr)
+library(cronR)
 
 # load webpage
 url = "https://www.premierleague.com/tables"
@@ -116,30 +117,32 @@ otable = epl_table %>%
 # order table by points
 otable = otable[order(otable$points, decreasing = T),]
 
+
+######## SQL database #######
 # connect to database
-library(RMySQL)
+#library(RMySQL)
 
 # database credentials
-db_user = "root"
-db_password = "Nuggetsbball2020"
-db_name = "scrape_test"
-db_table = "epl_table"
-db_host = "127.0.0.1"
-db_port = 3306
+#db_user = "root"
+#db_password = "Nuggetsbball2020"
+#db_name = "scrape_test"
+#db_table = "epl_table"
+#db_host = "127.0.0.1"
+#db_port = 3306
 
 # connect
-mydb = dbConnect(MySQL(), user = db_user, password = db_password, dbname = db_name, host = db_host, port = db_port)
+#mydb = dbConnect(MySQL(), user = db_user, password = db_password, dbname = db_name, host = db_host, port = db_port)
 
 # if there is a local loading error try this
 #dbSendQuery(mydb, "SET GLOBAL local_infile = true;")
 
 # write epl table
-dbWriteTable(conn = mydb,
-             name = epl_table,
-             value = epl_table,
-             overwrite = T)
+#dbWriteTable(conn = mydb,
+#             name = epl_table,
+#             value = epl_table,
+#             overwrite = T)
 # write owner table
-dbWriteTabel(conn = mydb,
-             name = owner_table,
-             value = otable,
-             overwrite = T)
+#dbWriteTabel(conn = mydb,
+#             name = owner_table,
+#             value = otable,
+#             overwrite = T)

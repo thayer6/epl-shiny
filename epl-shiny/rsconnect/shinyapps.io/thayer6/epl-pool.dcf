@@ -1,0 +1,12 @@
+name: epl-pool
+title: epl-pool
+username:
+account: thayer6
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2802768
+bundleId: 3625889
+url: https://thayer6.shinyapps.io/epl-pool/
+when: 1600055923.84401
+asMultiple: FALSE
+asStatic: FALSE
