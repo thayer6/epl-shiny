@@ -3,6 +3,8 @@ library(rvest)
 library(dplyr)
 library(cronR)
 
+
+#### Scrape Table ####
 # load webpage
 url = "https://www.premierleague.com/tables"
 webpage = read_html(url)
@@ -76,6 +78,7 @@ epl_table = epl_table %>%
 # order table by rank
 epl_table = epl_table[order(epl_table$rank),]
 
+##### Draft Results ####
 # draft results
 owners = c("Jason", "Casey", "Megan", "CB", "Neo")
 
@@ -117,32 +120,68 @@ otable = epl_table %>%
 # order table by points
 otable = otable[order(otable$points, decreasing = T),]
 
+#### Scrape Results and Fixtures ####
 
-######## SQL database #######
-# connect to database
-#library(RMySQL)
+# load webpage
+url = "https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures"
+webpage = read_html(url)
 
-# database credentials
-#db_user = "root"
-#db_password = "Nuggetsbball2020"
-#db_name = "scrape_test"
-#db_table = "epl_table"
-#db_host = "127.0.0.1"
-#db_port = 3306
+# scrape all home teams
+home_html = html_nodes(webpage, ".right a")
+orig_home = html_text(home_html)
+home = orig_home[-c(0:2)] # drop first few postponed games
 
-# connect
-#mydb = dbConnect(MySQL(), user = db_user, password = db_password, dbname = db_name, host = db_host, port = db_port)
+# scrape all away teams
+away_html = html_nodes(webpage, ".left a")
+orig_away = html_text(away_html)
+orig_away = orig_away[orig_away != "Match Report"]
+orig_away = orig_away[!grepl('-', orig_away)]
+away = orig_away[-c(0:2)] # drop first few postponed games
 
-# if there is a local loading error try this
-#dbSendQuery(mydb, "SET GLOBAL local_infile = true;")
+#### Send automated emails ####
+library(emayili)
+library(magrittr)
 
-# write epl table
-#dbWriteTable(conn = mydb,
-#             name = epl_table,
-#             value = epl_table,
-#             overwrite = T)
-# write owner table
-#dbWriteTabel(conn = mydb,
-#             name = owner_table,
-#             value = otable,
-#             overwrite = T)
+# send email when postponed games get changed
+# orig_home[0:2] should be Burnley, Manchester City
+# orig_away[0:2] should be Man U, Villa
+
+# send email every time the scrape happens and send the results
+# Create a reproducible data frame
+x <- head(mtcars)
+
+# Convert the data frame into an HTML Table
+y <- htmlTable(x, rnames = FALSE)
+
+# Define body of email
+html_body <- paste0("<p> This is a test email. </p>", y)
+
+
+email = envelope()
+
+email <- email %>%
+  from("casey.thayer6@gmail.com") %>%
+  to("casey.thayer6@gmail.com") %>% 
+  subject("This is a plain text message!") %>% 
+  text("Hello!")
+
+smtp <- server(host = "smtp.gmail.com",
+               port = 465,
+               username = "casey.thayer6@gmail.com",
+               password = "Bask3tb4ll!")
+smtp(email, verbose = TRUE)
+
+#### Export data to Dropbox ####
+library(rdrop2)
+token = drop_auth()
+
+saveRDS(token, file = "token.rds")
+epl_table$owner[epl_table$owner == "Neo"] <- "Neo ⭐"
+otable$owner[otable$owner == "Neo"] <- "Neo ⭐"
+
+write.csv(epl_table, "epl_table.csv")
+write.csv(otable, "owner_table.csv")
+drop_upload('epl_table.csv')
+drop_upload("owner_table.csv")
+
+

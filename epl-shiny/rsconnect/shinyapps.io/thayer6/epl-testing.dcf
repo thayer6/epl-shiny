@@ -1,0 +1,13 @@
+name: epl-testing
+title: epl-testing
+username:
+account: thayer6
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2875302
+bundleId: 3664436
+url: https://thayer6.shinyapps.io/epl-testing/
+when: 1600920779.20119
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: epl_table.csv|otable.csv
